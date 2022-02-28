@@ -1,15 +1,20 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import type { RootStackParamList } from "types/app";
+import type { BottomTabParamList } from "types/app";
 import React from "react";
-import { Text, Button as ReactNativeButton } from "react-native";
+import {
+  Text,
+  Button as ReactNativeButton,
+  StyleSheet,
+  View,
+} from "react-native";
 import useWorkouts from "hooks/useWorkouts";
 import WorkoutList from "molecules/WorkoutList";
 import Layout from "templates/Layout";
-import Button from "atoms/Button";
+import { Button } from "atoms/Button";
 
-function HistoryScreen({
+export function HistoryScreen({
   navigation,
-}: NativeStackScreenProps<RootStackParamList, "History">) {
+}: NativeStackScreenProps<BottomTabParamList, "History">) {
   const { data: workouts, error } = useWorkouts();
 
   React.useLayoutEffect(() => {
@@ -44,12 +49,20 @@ function HistoryScreen({
   return (
     <Layout>
       <WorkoutList workouts={workouts} />
-      <Button
-        label="Go Run"
-        onPress={() => navigation.navigate({ name: "Run", params: undefined })}
-      />
+      <View style={styles.buttonWrapper}>
+        <Button
+          onPress={() =>
+            navigation.navigate({ name: "StartRun", params: undefined })
+          }>
+          Go Run
+        </Button>
+      </View>
     </Layout>
   );
 }
 
-export default HistoryScreen;
+const styles = StyleSheet.create({
+  buttonWrapper: {
+    alignItems: "center",
+  },
+});

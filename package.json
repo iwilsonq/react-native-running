@@ -10,16 +10,20 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.4.1",
+    "@xstate/react": "^2.0.0",
     "react": "17.0.2",
     "react-native": "0.67.0",
     "react-native-dotenv": "^3.3.1",
     "react-native-geolocation-service": "^4.0.2",
+    "react-native-health": "^1.12.0",
     "react-native-maps": "^0.30.1",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.2",
-    "swr": "^1.2.2"
+    "swr": "^1.2.2",
+    "xstate": "^4.30.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

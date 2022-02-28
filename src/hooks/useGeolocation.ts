@@ -2,8 +2,18 @@ import React from "react";
 import { Region } from "react-native-maps";
 import Geolocation from "react-native-geolocation-service";
 
-function useGeolocation() {
-  const [region, setRegion] = React.useState<Region | undefined>();
+interface UseGeoLocation {
+  region?: Region;
+  position?: Geolocation.GeoPosition;
+}
+
+const DEFAULT_LATITUDE_DELTA = 0.015;
+const DEFAULT_LONGITUDE_DELTA = 0.0121;
+
+function useGeolocation(): UseGeoLocation {
+  const [position, setPosition] = React.useState<
+    Geolocation.GeoPosition | undefined
+  >();
   const watchIdRef = React.useRef<number>();
 
   function clearWatch(watchId: number) {
@@ -12,15 +22,7 @@ function useGeolocation() {
 
   React.useEffect(() => {
     watchIdRef.current = Geolocation.watchPosition(
-      position => {
-        console.log(position)
-        setRegion({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.0121,
-        });
-      },
+      position => setPosition(position),
       error => {
         console.log("error", error.code, error.message);
       },
@@ -34,7 +36,16 @@ function useGeolocation() {
     };
   }, []);
 
-  return { region };
+  const region: Region | undefined = position
+    ? {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        latitudeDelta: DEFAULT_LATITUDE_DELTA,
+        longitudeDelta: DEFAULT_LONGITUDE_DELTA,
+      }
+    : undefined;
+
+  return { region, position };
 }
 
 export default useGeolocation;
