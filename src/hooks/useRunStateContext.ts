@@ -3,10 +3,13 @@ import { useActor } from "@xstate/react";
 import { RunStateContext } from "contexts/RunStateContext";
 import useGeolocation from "hooks/useGeolocation";
 
-export function useRunStateContext() {
+export function useRunStateContext(startTiming: boolean = false) {
   const { runService } = React.useContext(RunStateContext);
   const [state] = useActor(runService);
-  const { position } = useGeolocation();
+  const { position } = useGeolocation({
+    startTiming,
+    isActive: state.matches("active"),
+  });
 
   React.useEffect(() => {
     if (position) {

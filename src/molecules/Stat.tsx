@@ -9,13 +9,29 @@ interface Props {
 
 export function Stat(props: Props) {
   return (
-    <View style={styles.container}>
+    <View style={styles.statContainer}>
       <Text>{props.value}</Text>
-      <Text size="sm" variant="muted">{props.label}</Text>
+      <Text size="sm" variant="muted">
+        {props.label}
+      </Text>
+    </View>
+  );
+}
+
+export function MainStat(props: Props) {
+  return (
+    <View style={styles.mainStatContainer}>
+      <Text size="xl">{props.value}</Text>
+      <Text size="lg" variant="muted">
+        {props.label}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {}
-})
+  statContainer: {},
+  mainStatContainer: {
+    alignItems: "center",
+  },
+});

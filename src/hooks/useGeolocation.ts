@@ -10,31 +10,42 @@ interface UseGeoLocation {
 const DEFAULT_LATITUDE_DELTA = 0.015;
 const DEFAULT_LONGITUDE_DELTA = 0.0121;
 
-function useGeolocation(): UseGeoLocation {
+const INTERVAL = 5000;
+
+function useGeolocation(options: {
+  startTiming: boolean;
+  isActive: boolean | undefined;
+}): UseGeoLocation {
   const [position, setPosition] = React.useState<
     Geolocation.GeoPosition | undefined
   >();
   const watchIdRef = React.useRef<number>();
 
   function clearWatch(watchId: number) {
-    Geolocation.clearWatch(watchId);
+    clearInterval(watchId);
   }
 
   React.useEffect(() => {
-    watchIdRef.current = Geolocation.watchPosition(
-      position => setPosition(position),
-      error => {
-        console.log("error", error.code, error.message);
-      },
-      { enableHighAccuracy: true, maximumAge: 10000 },
-    );
+    if (options.startTiming) {
+      watchIdRef.current = setInterval(() => {
+        if (options.isActive) {
+          Geolocation.getCurrentPosition(
+            position => setPosition(position),
+            error => {
+              console.log("error", error.code, error.message);
+            },
+            { enableHighAccuracy: true, maximumAge: 10000 },
+          );
+        }
+      }, INTERVAL);
+    }
 
     return () => {
       if (watchIdRef.current !== undefined) {
         clearWatch(watchIdRef.current);
       }
     };
-  }, []);
+  }, [options.startTiming, options.isActive]);
 
   const region: Region | undefined = position
     ? {

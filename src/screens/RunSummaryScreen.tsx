@@ -8,13 +8,21 @@ import { Button } from "atoms/Button";
 import { useRunStateContext } from "hooks/useRunStateContext";
 import { Stat } from "molecules/Stat";
 import { MapView } from "molecules/MapView";
+import {
+  displayDistanceInMiles,
+  displayDuration,
+  displayPacePerMile,
+} from "utils/stats";
 
 export function RunSummaryScreen({
   navigation,
 }: NativeStackScreenProps<RunStackParamList, "RunSummary">) {
   const { state, exit } = useRunStateContext();
 
-  const region = state.context.region;
+  const {
+    region,
+    stats: { momentary },
+  } = state.context;
 
   return (
     <Layout>
@@ -24,19 +32,32 @@ export function RunSummaryScreen({
         </View>
         <View style={styles.statsSection}>
           <View style={styles.statsColumn}>
-            <Stat value="7'47" label="Avg. Pace" />
+            <Stat value={momentary.averagePace} label="Avg. pace" />
             <Stat value="435ft" label="Elevation gained" />
           </View>
           <View style={styles.statsColumn}>
-            <Stat value="6.11" label="Miles ran" />
-            <Stat value="162" label="Avg. BPM" />
+            <Stat value={momentary.distance} label="Miles ran" />
+            <Stat
+              value={momentary.averageHeartrate?.toString() || "-"}
+              label="Avg. BPM"
+            />
           </View>
           <View style={styles.statsColumn}>
-            <Stat value="43:07" label="Duration" />
+            <Stat value={momentary.duration} label="Duration" />
           </View>
         </View>
         <View style={styles.mapContainer}>
           <MapView region={region} />
+        </View>
+
+        <View style={styles.actionButtonWrapper}>
+          <Button
+            onPress={() => {
+              exit();
+              navigation.navigate("Run");
+            }}>
+            Home
+          </Button>
         </View>
       </View>
     </Layout>

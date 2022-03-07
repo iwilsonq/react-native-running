@@ -1,7 +1,7 @@
 import Geolocation from "react-native-geolocation-service";
 import { Region } from "react-native-maps";
 
-export type Event =
+export type RunEvent =
   | "START"
   | "TIMER_EXPIRED"
   | "PAUSE"
@@ -9,40 +9,48 @@ export type Event =
   | "END"
   | "EXIT"
   | "ADD_POSITION"
+  | "TICK"
+  | "RESET_TIMER"
   | "SET_REGION";
 
-interface BaseEventObject {
-  type: Event;
+interface BaseRunEventObject {
+  type: RunEvent;
 }
 
-interface Start extends BaseEventObject {
+interface Start extends BaseRunEventObject {
   type: "START";
 }
-interface TimerExpired extends BaseEventObject {
+interface TimerExpired extends BaseRunEventObject {
   type: "TIMER_EXPIRED";
 }
-interface Pause extends BaseEventObject {
+interface Pause extends BaseRunEventObject {
   type: "PAUSE";
 }
-interface Resume extends BaseEventObject {
+interface Resume extends BaseRunEventObject {
   type: "RESUME";
 }
-interface End extends BaseEventObject {
+interface End extends BaseRunEventObject {
   type: "END";
 }
-interface Exit extends BaseEventObject {
+interface Exit extends BaseRunEventObject {
   type: "EXIT";
 }
-interface AddPosition extends BaseEventObject {
+export interface AddPosition extends BaseRunEventObject {
   type: "ADD_POSITION";
   value: Geolocation.GeoPosition;
 }
-interface SetRegion extends BaseEventObject {
+interface Tick extends BaseRunEventObject {
+  type: "TICK";
+}
+interface ResetTimer extends BaseRunEventObject {
+  type: "RESET_TIMER";
+}
+interface SetRegion extends BaseRunEventObject {
   type: "SET_REGION";
   value: Region;
 }
 
-export type EventObject =
+export type RunEventObject =
   | Start
   | TimerExpired
   | Pause
@@ -50,4 +58,6 @@ export type EventObject =
   | End
   | Exit
   | AddPosition
+  | Tick
+  | ResetTimer
   | SetRegion;

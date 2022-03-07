@@ -11,8 +11,8 @@ import { useRunStateContext } from "hooks/useRunStateContext";
 export function StartRunScreen({
   navigation,
 }: NativeStackScreenProps<RunStackParamList, "Run">) {
-  const { region } = useGeolocation();
-  const { state, start } = useRunStateContext();
+  const { region } = useGeolocation({ startTiming: false, isActive: false });
+  const { start } = useRunStateContext();
 
   return (
     <Layout>

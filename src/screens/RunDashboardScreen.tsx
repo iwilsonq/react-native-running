@@ -7,32 +7,39 @@ import { Text } from "atoms/Text";
 import { Button } from "atoms/Button";
 import { useRunStateContext } from "hooks/useRunStateContext";
 import { Countdown } from "organisms/Countdown";
+import { displayDuration } from "utils/stats";
+import { MainStat, Stat } from "molecules/Stat";
 
 export function RunDashboardScreen({
   navigation,
 }: NativeStackScreenProps<RunStackParamList, "RunDashboard">) {
-  const { state, pause, resume, end } = useRunStateContext();
+  const { state, pause, resume, end } = useRunStateContext(true);
 
   if (state.matches("countdown")) {
     return <Countdown countdown={state.context.countdown} />;
   }
 
+  const {
+    elapsed,
+    stats: { momentary },
+  } = state.context;
+  const elapsedInMs = elapsed * 1000;
+
   return (
     <Layout>
       <View style={styles.container}>
         <View style={styles.topbar}>
-          <Text size="md">7'47"</Text>
-          <Text size="md">6.11mi</Text>
-          <Text size="md">43:07</Text>
+          <Stat label="Avg. pace" value={momentary.averagePace} />
+          <Stat label="Miles" value={momentary.distance} />
+          <Stat label="Duration" value={displayDuration(elapsedInMs)} />
         </View>
-
         <View style={styles.main}>
-          <Text size="xl">7'31"</Text>
           {state.matches("paused") ? (
             <Text>Paused.</Text>
           ) : (
             <Text>Running!</Text>
           )}
+          <MainStat label="Pace" value={momentary.currentPace} />
         </View>
         <View style={styles.actionButtons}>
           {state.matches("active") ? (
